@@ -1,11 +1,15 @@
 package pl.mleczkobartosz.FootballManager.Rest;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.International;
 import pl.mleczkobartosz.FootballManager.Exception.InternationalNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.InternationalRepository;
 
+
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class InternationalController {
@@ -17,8 +21,8 @@ public class InternationalController {
     }
 
     @GetMapping("/internationals")
-    public List<International> findAll(){
-        return internationalRepository.findAll();
+    public Page<International> findAll(Optional<String> name, Pageable pageable){
+        return internationalRepository.findInternationalByName(name.orElse("_"),pageable);
     }
 
     @GetMapping("/internationals/{id}")

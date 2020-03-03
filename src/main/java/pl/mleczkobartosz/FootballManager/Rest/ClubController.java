@@ -1,11 +1,14 @@
 package pl.mleczkobartosz.FootballManager.Rest;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.Club;
 import pl.mleczkobartosz.FootballManager.Exception.ClubNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ClubController {
@@ -17,8 +20,11 @@ public class ClubController {
     }
 
     @GetMapping("/clubs")
-    public List<Club> findAll(){
-        return clubRepository.findAll();
+    public Page<Club> findAll(Optional<String> name, Optional<Integer> year, Pageable pageable){
+        if(!year.isPresent())
+            return clubRepository.findByClubName(name.orElse("_"),pageable);
+
+        return clubRepository.findByClubNameAndFoundationYear(name.orElse("_"),year.get(),pageable);
     }
 
     @GetMapping("/clubs/{id}")
