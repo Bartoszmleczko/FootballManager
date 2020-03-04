@@ -7,6 +7,7 @@ import pl.mleczkobartosz.FootballManager.Entity.Club;
 import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -32,7 +33,7 @@ public class ClubController {
     }
 
     @PostMapping("/clubs")
-    public Club saveClub(@RequestBody Club club){
+    public Club saveClub(@Valid @RequestBody Club club){
         return clubRepository.save(club);
     }
 

@@ -3,6 +3,7 @@ package pl.mleczkobartosz.FootballManager.Entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,9 +16,15 @@ public class Club {
     @Column(name = "club_id")
     private Long club_id;
 
+    @NotNull(message = "Club must have a name")
+    @NotEmpty(message = "Club must have a name")
+    @NotBlank(message = "Club must have a name")
+    @Size(min = 3)
     @Column(name = "club_name")
     private String clubName;
 
+    @Min(1850)
+    @NotNull(message = "Club must have a foundation year")
     @Column(name="foundation_year")
     private Integer foundationYear;
 
@@ -29,7 +36,6 @@ public class Club {
     private Manager manager;
 
     @ManyToMany(mappedBy = "clubs")
-    @JsonManagedReference
     private Set<League> leagues;
 
 
