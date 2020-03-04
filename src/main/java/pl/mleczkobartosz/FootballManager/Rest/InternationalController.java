@@ -4,11 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.International;
-import pl.mleczkobartosz.FootballManager.Exception.InternationalNotFoundException;
+import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.InternationalRepository;
 
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -27,7 +26,7 @@ public class InternationalController {
 
     @GetMapping("/internationals/{id}")
     public International findById(@PathVariable Long id){
-        return internationalRepository.findById(id).orElseThrow(() ->new  InternationalNotFoundException(id));
+        return internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(new International(),id));
     }
 
     @PostMapping("/internationals")
@@ -37,7 +36,7 @@ public class InternationalController {
 
     @PutMapping("/internationals/{id}")
     public International updateInternational(@PathVariable Long id, @RequestBody International international){
-        International dbInternational = internationalRepository.findById(id).orElseThrow(() -> new InternationalNotFoundException(id));
+        International dbInternational = internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(new International(),id));
         dbInternational.setInternationalName(international.getInternationalName());
         dbInternational.setPlayers(international.getPlayers());
         return internationalRepository.save(dbInternational);
@@ -45,7 +44,7 @@ public class InternationalController {
 
     @DeleteMapping("/international/{id}")
     public String deleteInternational(@PathVariable Long id){
-        International international = internationalRepository.findById(id).orElseThrow(() -> new InternationalNotFoundException(id));
+        International international = internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(new International(),id));
         internationalRepository.delete(international);
         return "International deleted";
     }

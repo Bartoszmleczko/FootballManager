@@ -4,10 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.Club;
-import pl.mleczkobartosz.FootballManager.Exception.ClubNotFoundException;
+import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -29,7 +28,7 @@ public class ClubController {
 
     @GetMapping("/clubs/{id}")
     public Club getClub(@PathVariable Long id){
-        return clubRepository.findById(id).orElseThrow(() -> new ClubNotFoundException(id));
+        return clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Club(),id));
     }
 
     @PostMapping("/clubs")
@@ -39,17 +38,18 @@ public class ClubController {
 
     @PutMapping("/clubs/{id}")
     public Club updateClub(@PathVariable Long id, @RequestBody Club club){
-        Club dbClub = clubRepository.findById(id).orElseThrow(() -> new ClubNotFoundException(id));
+        Club dbClub = clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Club(),id));
         dbClub.setClubName(club.getClubName());
         dbClub.setFoundationYear(club.getFoundationYear());
         dbClub.setMenager(club.getManager());
         dbClub.setPlayers(club.getPlayers());
+        dbClub.setLeagues(club.getLeagues());
         return clubRepository.save(dbClub);
     }
 
     @DeleteMapping("/clubs/{id}")
     public String deleteClub(@PathVariable Long id){
-        Club dbClub = clubRepository.findById(id).orElseThrow(() -> new ClubNotFoundException(id));
+        Club dbClub = clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Club(),id));
         clubRepository.delete(dbClub);
         return "Club deleted";
     }

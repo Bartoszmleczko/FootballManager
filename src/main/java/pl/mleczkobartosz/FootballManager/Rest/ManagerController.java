@@ -4,10 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.Manager;
-import pl.mleczkobartosz.FootballManager.Exception.ManagerNotFoundException;
+import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.ManagerRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -29,7 +28,7 @@ public class ManagerController {
 
     @GetMapping("/managers/{id}")
     public Manager findById(@PathVariable Long id){
-        return managerRepository.findById(id).orElseThrow(() -> new ManagerNotFoundException(id));
+        return managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
     }
 
     @PostMapping("/managers")
@@ -39,7 +38,7 @@ public class ManagerController {
 
     @PutMapping("/managers/{id}")
     public Manager updateManager(@PathVariable Long id, @RequestBody Manager manager){
-        Manager dbManager = managerRepository.findById(id).orElseThrow(() -> new ManagerNotFoundException(id));
+        Manager dbManager = managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
 
         dbManager.setFirstName(manager.getFirstName());
         dbManager.setLastName(manager.getLastName());
@@ -50,7 +49,7 @@ public class ManagerController {
 
     @DeleteMapping("/managers/{id}")
     public String deleteManager(@PathVariable Long id){
-        Manager manager = managerRepository.findById(id).orElseThrow(() -> new ManagerNotFoundException(id));
+        Manager manager = managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
         managerRepository.delete(manager);
         return "Manager has been deleted";
 

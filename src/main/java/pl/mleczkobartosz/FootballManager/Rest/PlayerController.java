@@ -4,10 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.Player;
-import pl.mleczkobartosz.FootballManager.Exception.PlayerNotFoundException;
+import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.PlayerRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,7 +27,7 @@ public class PlayerController {
 
     @GetMapping("/players/{id}")
     public Player findPlayerById(@PathVariable Long id){
-        return playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException(id));
+        return playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Player(),id));
     }
 
     @PostMapping("/players")
@@ -38,7 +37,7 @@ public class PlayerController {
 
     @PutMapping("/players/{id}")
     public Player updatePlayer(@PathVariable Long id, @RequestBody Player player){
-        Player dbPlayer = playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException(id));
+        Player dbPlayer = playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Player(),id));
         dbPlayer.setFirstName(player.getFirstName());
         dbPlayer.setLastName(player.getLastName());
         dbPlayer.setBirthYear(player.getBirthYear());
@@ -46,12 +45,11 @@ public class PlayerController {
         dbPlayer.setInternational(player.getInternational());
         dbPlayer.setMarketValue(player.getMarketValue());
         return playerRepository.save(dbPlayer);
-
     }
 
     @DeleteMapping("/players/{id}")
     public String deletePlayer(@PathVariable Long id){
-        Player player = playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException(id));
+        Player player = playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Player(),id));
         playerRepository.delete(player);
         return "Player deleted";
     }

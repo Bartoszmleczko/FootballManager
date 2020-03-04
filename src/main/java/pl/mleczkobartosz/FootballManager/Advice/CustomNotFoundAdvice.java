@@ -5,15 +5,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import pl.mleczkobartosz.FootballManager.Exception.InternationalNotFoundException;
+import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 
 @ControllerAdvice
-public class InternationalNotFoundAdvice{
+public class CustomNotFoundAdvice {
 
     @ResponseBody
-    @ExceptionHandler(InternationalNotFoundException.class)
+    @ExceptionHandler(CustomNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String internationalNotFoundException(InternationalNotFoundException ex){
+    String notFoundHandler(CustomNotFoundException ex){
         return ex.getMessage();
     }
 

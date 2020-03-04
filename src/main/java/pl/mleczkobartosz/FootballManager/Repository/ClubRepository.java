@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import pl.mleczkobartosz.FootballManager.Entity.Club;
+import pl.mleczkobartosz.FootballManager.Entity.League;
 
 public interface ClubRepository extends JpaRepository<Club,Long> {
 

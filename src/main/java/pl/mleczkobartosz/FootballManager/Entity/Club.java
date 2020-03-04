@@ -1,5 +1,7 @@
 package pl.mleczkobartosz.FootballManager.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,14 +28,20 @@ public class Club {
     @JoinColumn
     private Manager manager;
 
+    @ManyToMany(mappedBy = "clubs")
+    @JsonManagedReference
+    private Set<League> leagues;
+
+
     public Club() {
     }
 
-    public Club(String clubName, Integer foundationYear, Set<Player> players, Manager menager) {
+    public Club(String clubName, Integer foundationYear, Set<Player> players, Manager manager, Set<League> leagues) {
         this.clubName = clubName;
         this.foundationYear = foundationYear;
         this.players = players;
-        this.manager = menager;
+        this.manager = manager;
+        this.leagues = leagues;
     }
 
     public Long getClub_id() {
@@ -75,4 +83,19 @@ public class Club {
     public void setMenager(Manager manager) {
         this.manager = manager;
     }
+
+    public void setManager(Manager manager) {
+        this.manager = manager;
+    }
+
+    public Set<League> getLeagues() {
+        return leagues;
+    }
+
+    public void setLeagues(Set<League> leagues) {
+        this.leagues = leagues;
+    }
+
+
 }
+
