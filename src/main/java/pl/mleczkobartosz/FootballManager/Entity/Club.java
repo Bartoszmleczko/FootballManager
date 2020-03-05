@@ -1,5 +1,6 @@
 package pl.mleczkobartosz.FootballManager.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class Club {
     private Integer foundationYear;
 
     @OneToMany(mappedBy = "club", cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JsonBackReference
     private Set<Player> players = new HashSet<Player>();
 
     @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
@@ -38,6 +40,11 @@ public class Club {
     @ManyToMany(mappedBy = "clubs")
     private Set<League> leagues;
 
+    @OneToMany(mappedBy = "buyingClub")
+    private Set<Transfer> incomeTransfers = new HashSet<Transfer>();
+
+    @OneToMany(mappedBy = "sellingClub")
+    private Set<Transfer> outcomeTransfers = new HashSet<Transfer>();
 
     public Club() {
     }

@@ -3,6 +3,10 @@ package pl.mleczkobartosz.FootballManager.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +19,10 @@ public class League {
     @Column(name = "league_id")
     private Long league_id;
 
+    @NotNull(message = "Club must have a name")
+    @NotEmpty(message = "Club must have a name")
+    @NotBlank(message = "Club must have a name")
+    @Size(min = 3)
     @Column(name = "league_name")
     private String leagueName;
 

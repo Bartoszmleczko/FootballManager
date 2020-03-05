@@ -7,6 +7,7 @@ import pl.mleczkobartosz.FootballManager.Entity.Player;
 import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.PlayerRepository;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -31,12 +32,12 @@ public class PlayerController {
     }
 
     @PostMapping("/players")
-    public Player savePlayer(@RequestBody Player player){
+    public Player savePlayer(@Valid @RequestBody Player player){
         return playerRepository.save(player);
     }
 
     @PutMapping("/players/{id}")
-    public Player updatePlayer(@PathVariable Long id, @RequestBody Player player){
+    public Player updatePlayer(@PathVariable Long id,@Valid @RequestBody Player player){
         Player dbPlayer = playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Player(),id));
         dbPlayer.setFirstName(player.getFirstName());
         dbPlayer.setLastName(player.getLastName());

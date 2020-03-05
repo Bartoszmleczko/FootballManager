@@ -1,6 +1,9 @@
 package pl.mleczkobartosz.FootballManager.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Date;
 @Entity
@@ -12,14 +15,27 @@ public class Manager {
     @Column(name = "menager_id")
     private Long menager_id;
 
+    @NotNull(message = "Club must have a name")
+    @NotEmpty(message = "Club must have a name")
+    @NotBlank(message = "Club must have a name")
+    @Size(min = 3)
     @Column(name = "first_name")
     private String firstName;
+
+    @NotNull(message = "Club must have a name")
+    @NotEmpty(message = "Club must have a name")
+    @NotBlank(message = "Club must have a name")
+    @Size(min = 3)
     @Column(name="last_name")
     private String lastName;
+
+    @Min(1850)
+    @NotNull(message = "Club must have a foundation year")
     @Column(name="birth_year")
     private Integer birthYear;
 
     @OneToOne(mappedBy = "manager",cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JsonBackReference
     private Club club;
 
     public Manager() {

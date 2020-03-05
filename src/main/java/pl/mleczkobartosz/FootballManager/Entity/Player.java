@@ -1,6 +1,10 @@
 package pl.mleczkobartosz.FootballManager.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "player")
@@ -19,21 +23,24 @@ public class Player {
     private Integer birthYear;
     @Column(name = "market_value")
     private Long marketValue;
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn
     private International international;
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn
     private Club club;
+    @OneToMany(mappedBy = "player")
+    @JsonBackReference
+    private Set<Transfer> transfer;
 
-
-    public Player(String firstName, String lastName, Integer birthYear, Long marketValue, International international, Club club) {
+    public Player(String firstName, String lastName, Integer birthYear, Long marketValue, International international, Club club, Set<Transfer> transfer) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthYear = birthYear;
         this.marketValue = marketValue;
         this.international = international;
         this.club = club;
+        this.transfer = transfer;
     }
 
     public Player() {
@@ -94,5 +101,13 @@ public class Player {
 
     public void setClub(Club club) {
         this.club = club;
+    }
+
+    public Set<Transfer> getTransfer() {
+        return transfer;
+    }
+
+    public void setTransfer(Set<Transfer> transfer) {
+        this.transfer = transfer;
     }
 }

@@ -7,6 +7,7 @@ import pl.mleczkobartosz.FootballManager.Entity.Manager;
 import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.ManagerRepository;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -32,12 +33,13 @@ public class ManagerController {
     }
 
     @PostMapping("/managers")
-    public Manager saveManager(@RequestBody Manager manager){
+    public Manager saveManager(@Valid @RequestBody Manager manager){
         return managerRepository.save(manager);
     }
 
     @PutMapping("/managers/{id}")
-    public Manager updateManager(@PathVariable Long id, @RequestBody Manager manager){
+    public Manager updateManager(@PathVariable Long id,
+                                 @Valid @RequestBody Manager manager){
         Manager dbManager = managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
 
         dbManager.setFirstName(manager.getFirstName());
