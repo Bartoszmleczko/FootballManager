@@ -38,7 +38,6 @@ public class InternationalController {
     public International updateInternational(@PathVariable Long id, @RequestBody International international){
         International dbInternational = internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(new International(),id));
         dbInternational.setInternationalName(international.getInternationalName());
-        dbInternational.setPlayers(international.getPlayers());
         return internationalRepository.save(dbInternational);
     }
 

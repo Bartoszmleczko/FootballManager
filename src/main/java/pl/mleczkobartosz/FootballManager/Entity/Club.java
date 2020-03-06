@@ -30,31 +30,33 @@ public class Club {
     private Integer foundationYear;
 
     @OneToMany(mappedBy = "club", cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JsonBackReference
     private Set<Player> players = new HashSet<Player>();
 
     @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn
     private Manager manager;
 
-    @ManyToMany(mappedBy = "clubs")
-    private Set<League> leagues;
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
+    @JoinColumn
+    private League league;
 
     @OneToMany(mappedBy = "buyingClub")
+    @JsonBackReference
     private Set<Transfer> incomeTransfers = new HashSet<Transfer>();
 
     @OneToMany(mappedBy = "sellingClub")
+    @JsonBackReference
     private Set<Transfer> outcomeTransfers = new HashSet<Transfer>();
 
     public Club() {
     }
 
-    public Club(String clubName, Integer foundationYear, Set<Player> players, Manager manager, Set<League> leagues) {
+    public Club(String clubName, Integer foundationYear, Set<Player> players, Manager manager, League league) {
         this.clubName = clubName;
         this.foundationYear = foundationYear;
         this.players = players;
         this.manager = manager;
-        this.leagues = leagues;
+        this.league = league;
     }
 
     public Long getClub_id() {
@@ -101,14 +103,28 @@ public class Club {
         this.manager = manager;
     }
 
-    public Set<League> getLeagues() {
-        return leagues;
+    public League getLeague() {
+        return league;
     }
 
-    public void setLeagues(Set<League> leagues) {
-        this.leagues = leagues;
+    public void setLeague(League league) {
+        this.league = league;
     }
 
+    public Set<Transfer> getIncomeTransfers() {
+        return incomeTransfers;
+    }
 
+    public void setIncomeTransfers(Set<Transfer> incomeTransfers) {
+        this.incomeTransfers = incomeTransfers;
+    }
+
+    public Set<Transfer> getOutcomeTransfers() {
+        return outcomeTransfers;
+    }
+
+    public void setOutcomeTransfers(Set<Transfer> outcomeTransfers) {
+        this.outcomeTransfers = outcomeTransfers;
+    }
 }
 

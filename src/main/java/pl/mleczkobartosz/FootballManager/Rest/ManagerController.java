@@ -45,7 +45,6 @@ public class ManagerController {
         dbManager.setFirstName(manager.getFirstName());
         dbManager.setLastName(manager.getLastName());
         dbManager.setBirthYear(manager.getBirthYear());
-        dbManager.setClub(manager.getClub());
         return managerRepository.save(dbManager);
     }
 

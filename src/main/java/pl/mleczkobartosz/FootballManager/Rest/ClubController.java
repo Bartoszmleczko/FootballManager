@@ -45,7 +45,7 @@ public class ClubController {
         dbClub.setFoundationYear(club.getFoundationYear());
         dbClub.setMenager(club.getManager());
         dbClub.setPlayers(club.getPlayers());
-        dbClub.setLeagues(club.getLeagues());
+        dbClub.setLeague(club.getLeague());
         return clubRepository.save(dbClub);
     }
 

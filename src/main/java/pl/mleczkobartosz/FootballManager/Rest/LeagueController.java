@@ -41,7 +41,6 @@ private final ClubRepository clubRepository;
     public League updateLeague(@PathVariable Long id, @RequestBody League league){
         League dbLeague = leagueRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new League(),id));
         dbLeague.setLeagueName(league.getLeagueName());
-        dbLeague.setClubs(league.getClubs());
         return leagueRepository.save(dbLeague);
     }
 

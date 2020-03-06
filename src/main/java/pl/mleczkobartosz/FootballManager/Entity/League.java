@@ -26,8 +26,7 @@ public class League {
     @Column(name = "league_name")
     private String leagueName;
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name="league_club", joinColumns = @JoinColumn(name = "club_id"), inverseJoinColumns = @JoinColumn(name="league_id"))
+    @OneToMany(mappedBy = "league")
     @JsonBackReference
     private Set<Club> clubs = new HashSet<Club>();
 
