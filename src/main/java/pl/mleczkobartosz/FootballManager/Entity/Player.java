@@ -23,10 +23,10 @@ public class Player {
     private Integer birthYear;
     @Column(name = "market_value")
     private Long marketValue;
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn
     private International international;
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
+    @ManyToOne
     @JoinColumn
     private Club club;
     @OneToMany(mappedBy = "player")

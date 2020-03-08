@@ -1,7 +1,6 @@
 package pl.mleczkobartosz.FootballManager.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -29,23 +28,26 @@ public class Club {
     @Column(name="foundation_year")
     private Integer foundationYear;
 
-    @OneToMany(mappedBy = "club", cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToMany(mappedBy = "club")
+    @JsonBackReference("players")
     private Set<Player> players = new HashSet<Player>();
 
-    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @NotNull(message = "Club must have manager")
+    @OneToOne
     @JoinColumn
     private Manager manager;
 
+    @NotNull(message = "Club must belong to the league")
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn
     private League league;
 
     @OneToMany(mappedBy = "buyingClub")
-    @JsonBackReference
+    @JsonBackReference("incomeTransfer")
     private Set<Transfer> incomeTransfers = new HashSet<Transfer>();
 
     @OneToMany(mappedBy = "sellingClub")
-    @JsonBackReference
+    @JsonBackReference("outcomeTransfer")
     private Set<Transfer> outcomeTransfers = new HashSet<Transfer>();
 
     public Club() {

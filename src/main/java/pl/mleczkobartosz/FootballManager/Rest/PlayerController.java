@@ -42,7 +42,9 @@ public class PlayerController {
         dbPlayer.setFirstName(player.getFirstName());
         dbPlayer.setLastName(player.getLastName());
         dbPlayer.setBirthYear(player.getBirthYear());
+        if(player.getClub()!=null)
         dbPlayer.setClub(player.getClub());
+        if(player.getInternational()!=null)
         dbPlayer.setInternational(player.getInternational());
         dbPlayer.setMarketValue(player.getMarketValue());
         return playerRepository.save(dbPlayer);

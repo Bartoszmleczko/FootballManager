@@ -39,12 +39,15 @@ public class ClubController {
     }
 
     @PutMapping("/clubs/{id}")
-    public Club updateClub(@PathVariable Long id, @RequestBody Club club){
+    public Club updateClub(@PathVariable Long id,@Valid @RequestBody Club club){
         Club dbClub = clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Club(),id));
         dbClub.setClubName(club.getClubName());
         dbClub.setFoundationYear(club.getFoundationYear());
+        if(club.getManager()!=null)
         dbClub.setMenager(club.getManager());
+        if(club.getPlayers()!=null)
         dbClub.setPlayers(club.getPlayers());
+        if(club.getLeague()!=null)
         dbClub.setLeague(club.getLeague());
         return clubRepository.save(dbClub);
     }
