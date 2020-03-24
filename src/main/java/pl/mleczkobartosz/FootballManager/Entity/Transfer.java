@@ -35,6 +35,9 @@ public class Transfer {
     @Column(name = "final_price")
     private Long finalPrice;
 
+    public Transfer() {
+    }
+
     public Transfer(Club buyingClub, Club sellingClub, Player player, Long basePrice, Long addOns) {
         this.buyingClub = buyingClub;
         this.sellingClub = sellingClub;

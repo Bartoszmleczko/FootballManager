@@ -4,9 +4,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.Club;
-import pl.mleczkobartosz.FootballManager.Entity.Player;
+import pl.mleczkobartosz.FootballManager.Entity.League;
+import pl.mleczkobartosz.FootballManager.Entity.Manager;
 import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
+import pl.mleczkobartosz.FootballManager.Exception.ManagerAlreadyHasAClubException;
+import pl.mleczkobartosz.FootballManager.Model.ClubModel;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
+import pl.mleczkobartosz.FootballManager.Repository.LeagueRepository;
+import pl.mleczkobartosz.FootballManager.Repository.ManagerRepository;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -15,9 +20,14 @@ import java.util.Optional;
 public class ClubController {
 
     private final ClubRepository clubRepository;
+    private final ManagerRepository managerRepository;
+    private final LeagueRepository leagueRepository;
 
-    public ClubController(ClubRepository clubRepository) {
+
+    public ClubController(ClubRepository clubRepository, ManagerRepository managerRepository, LeagueRepository leagueRepository) {
         this.clubRepository = clubRepository;
+        this.managerRepository = managerRepository;
+        this.leagueRepository = leagueRepository;
     }
 
     @GetMapping("/clubs")
@@ -34,21 +44,33 @@ public class ClubController {
     }
 
     @PostMapping("/clubs")
-    public Club saveClub(@Valid @RequestBody Club club){
+    public Club saveClub(@Valid @RequestBody ClubModel clubModel){
+
+        Club club =  new Club();
+        League league = leagueRepository.findById(clubModel.getLeagueId()).orElseThrow(() -> new CustomNotFoundException(new League(),clubModel.getLeagueId()));
+        Manager manager = managerRepository.findById(clubModel.getManagerId()).orElseThrow(() -> new CustomNotFoundException(new Manager(),clubModel.getManagerId()));
+
+        club.setClubName(clubModel.getClubName());
+        club.setFoundationYear(clubModel.getFoundationYear());
+        club.setLeague(league);
+        if(manager.getClub()==null){
+            club.setMenager(manager);
+        }else
+        {
+            throw new ManagerAlreadyHasAClubException(manager.getMenager_id());
+        }
+        club.setPlayers(null);
+
         return clubRepository.save(club);
     }
 
     @PutMapping("/clubs/{id}")
-    public Club updateClub(@PathVariable Long id,@Valid @RequestBody Club club){
+    public Club updateClub(@PathVariable Long id,@Valid @RequestBody ClubModel clubModel){
         Club dbClub = clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Club(),id));
-        dbClub.setClubName(club.getClubName());
-        dbClub.setFoundationYear(club.getFoundationYear());
-        if(club.getManager()!=null)
-        dbClub.setMenager(club.getManager());
-        if(club.getPlayers()!=null)
-        dbClub.setPlayers(club.getPlayers());
-        if(club.getLeague()!=null)
-        dbClub.setLeague(club.getLeague());
+        dbClub.setClubName(clubModel.getClubName());
+        dbClub.setFoundationYear(clubModel.getFoundationYear());
+        dbClub.setMenager( managerRepository.findById(clubModel.getManagerId()).orElseThrow(() -> new CustomNotFoundException(new Manager(),clubModel.getManagerId())));
+        dbClub.setLeague( leagueRepository.findById( clubModel.getLeagueId()).orElseThrow(() -> new CustomNotFoundException(new League(), clubModel.getLeagueId())) );
         return clubRepository.save(dbClub);
     }
 

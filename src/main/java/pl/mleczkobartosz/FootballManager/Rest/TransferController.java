@@ -6,8 +6,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import pl.mleczkobartosz.FootballManager.Entity.Club;
 import pl.mleczkobartosz.FootballManager.Entity.Player;
 import pl.mleczkobartosz.FootballManager.Entity.Transfer;
+import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
+import pl.mleczkobartosz.FootballManager.Model.TransferModel;
+import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
+import pl.mleczkobartosz.FootballManager.Repository.PlayerRepository;
 import pl.mleczkobartosz.FootballManager.Repository.TransferRepository;
 
 import javax.validation.Valid;
@@ -16,9 +21,13 @@ import javax.validation.Valid;
 public class TransferController {
 
     private final TransferRepository transferRepository;
+    private final ClubRepository clubRepository;
+    private final PlayerRepository playerRepository;
 
-    public TransferController(TransferRepository transferRepository) {
+    public TransferController(TransferRepository transferRepository, ClubRepository clubRepository, PlayerRepository playerRepository) {
         this.transferRepository = transferRepository;
+        this.clubRepository = clubRepository;
+        this.playerRepository = playerRepository;
     }
 
     @GetMapping("/transfers")
@@ -27,8 +36,25 @@ public class TransferController {
     }
 
     @PostMapping("/transfers")
-    public Transfer saveTransfer(@Valid @RequestBody Transfer transfer){
-        return transferRepository.save(transfer);
+    public Transfer saveTransfer(@Valid @RequestBody TransferModel transfer){
+
+        Transfer dbTransfer = new Transfer();
+        Club buyer = clubRepository.findById(transfer.getBuying_id()).orElseThrow(() -> new CustomNotFoundException(new Club(),transfer.getBuying_id()));
+        Club seller = clubRepository.findById(transfer.getSeller_id()).orElseThrow(() -> new CustomNotFoundException(new Club(),transfer.getSeller_id()));
+        Player player = playerRepository.findById(transfer.getPlayerId()).orElseThrow(() -> new CustomNotFoundException(new Player(),transfer.getPlayerId()));
+
+        dbTransfer.setBasePrice(transfer.getBasePrice());
+        dbTransfer.setAddOns(transfer.getAddOns());
+        dbTransfer.setBuyingClub(buyer);
+        dbTransfer.setSellingClub(seller);
+        dbTransfer.setPlayer(player);
+        dbTransfer.setFinalPrice(transfer.getBasePrice()+transfer.getAddOns());
+
+        player.setClub(buyer);
+
+        playerRepository.save(player);
+
+        return transferRepository.save(dbTransfer);
     }
 
 }
