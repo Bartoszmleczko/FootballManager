@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.Manager;
 import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 import pl.mleczkobartosz.FootballManager.Repository.ManagerRepository;
+import pl.mleczkobartosz.FootballManager.Service.ManagerService;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -13,47 +14,37 @@ import java.util.Optional;
 @RestController
 public class ManagerController {
 
-    private final ManagerRepository managerRepository;
 
-    public ManagerController(ManagerRepository managerRepository) {
-        this.managerRepository = managerRepository;
+    private final ManagerService managerService;
+
+    public ManagerController(ManagerService managerService) {
+        this.managerService = managerService;
     }
 
     @GetMapping("/managers")
     public Page<Manager> findAll(Optional<String> firstName, Optional<String> lastName, Optional<Integer> birthYear, Pageable pageable){
-        if(!birthYear.isPresent())
-            return managerRepository.findManagerByFirstNameAndLastName(firstName.orElse("_"),lastName.orElse("_"),pageable);
-
-        return managerRepository.findManagerByFirstNameAndLastNameAndBirthYear(firstName.orElse("_"),lastName.orElse("_"), birthYear.get(),pageable);
+        return managerService.findAll(firstName,lastName,birthYear,pageable);
     }
 
     @GetMapping("/managers/{id}")
     public Manager findById(@PathVariable Long id){
-        return managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
+        return managerService.findById(id);
     }
 
     @PostMapping("/managers")
     public Manager saveManager(@Valid @RequestBody Manager manager){
-        return managerRepository.save(manager);
+        return managerService.save(manager);
     }
 
     @PutMapping("/managers/{id}")
     public Manager updateManager(@PathVariable Long id,
                                  @Valid @RequestBody Manager manager){
-        Manager dbManager = managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
-
-        dbManager.setFirstName(manager.getFirstName());
-        dbManager.setLastName(manager.getLastName());
-        dbManager.setBirthYear(manager.getBirthYear());
-        return managerRepository.save(dbManager);
+        return managerService.updateManager(id,manager);
     }
 
     @DeleteMapping("/managers/{id}")
     public String deleteManager(@PathVariable Long id){
-        Manager manager = managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
-        managerRepository.delete(manager);
-        return "Manager has been deleted";
-
+        return managerService.delete(id);
     }
 
 }

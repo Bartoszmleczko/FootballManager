@@ -10,6 +10,7 @@ import pl.mleczkobartosz.FootballManager.Entity.Club;
 import pl.mleczkobartosz.FootballManager.Entity.Player;
 import pl.mleczkobartosz.FootballManager.Entity.Transfer;
 import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
+import pl.mleczkobartosz.FootballManager.Exception.WrongTransferRequest;
 import pl.mleczkobartosz.FootballManager.Model.TransferModel;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
 import pl.mleczkobartosz.FootballManager.Repository.PlayerRepository;
@@ -42,6 +43,10 @@ public class TransferController {
         Club buyer = clubRepository.findById(transfer.getBuying_id()).orElseThrow(() -> new CustomNotFoundException(new Club(),transfer.getBuying_id()));
         Club seller = clubRepository.findById(transfer.getSeller_id()).orElseThrow(() -> new CustomNotFoundException(new Club(),transfer.getSeller_id()));
         Player player = playerRepository.findById(transfer.getPlayerId()).orElseThrow(() -> new CustomNotFoundException(new Player(),transfer.getPlayerId()));
+
+        if(buyer == seller){
+            throw new WrongTransferRequest();
+        }
 
         dbTransfer.setBasePrice(transfer.getBasePrice());
         dbTransfer.setAddOns(transfer.getAddOns());
