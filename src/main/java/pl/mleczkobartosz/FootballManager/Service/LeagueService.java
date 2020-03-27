@@ -25,7 +25,7 @@ public class LeagueService {
 
     @Transactional
     public League findById(Long id){
-        return leagueRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new League(),id));
+        return leagueRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(League.class.getSimpleName(),id));
     }
 
     @Transactional
@@ -35,14 +35,14 @@ public class LeagueService {
 
     @Transactional
     public League update(Long id, League league){
-        League dbLeague = leagueRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new League(),id));
+        League dbLeague = leagueRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(League.class.getSimpleName(),id));
         dbLeague.setLeagueName(league.getLeagueName());
         return leagueRepository.save(dbLeague);
     }
 
     @Transactional
     public String delete(Long id){
-        League league = leagueRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new League(),id));
+        League league = leagueRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(League.class.getSimpleName(),id));
         return "League deleted";
     }
 

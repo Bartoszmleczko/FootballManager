@@ -38,14 +38,14 @@ public class PlayerService {
 
     @Transactional
     public Player findById(Long id){
-        return playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Player(),id));
+        return playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(this.getClass().getSimpleName(),id));
     }
 
     @Transactional
     public Player save(PlayerModel player){
         Player dbPlayer = new Player();
-        Club club = clubRepository.findById(player.getClubId()).orElseThrow(() -> new CustomNotFoundException(new Club(),player.getClubId()));
-        International international = internationalRepository.findById(player.getInternationalId()).orElseThrow(() -> new CustomNotFoundException(new International(),player.getInternationalId()));
+        Club club = clubRepository.findById(player.getClubId()).orElseThrow(() -> new CustomNotFoundException(Club.class.getSimpleName(),player.getClubId()));
+        International international = internationalRepository.findById(player.getInternationalId()).orElseThrow(() -> new CustomNotFoundException(International.class.getSimpleName(),player.getInternationalId()));
 
         dbPlayer.setFirstName(player.getFirstName());
         dbPlayer.setLastName(player.getLastName());
@@ -59,9 +59,9 @@ public class PlayerService {
 
     @Transactional
     public Player update (Long id, PlayerModel player){
-        Player dbPlayer = playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Player(),id));
-        Club club = clubRepository.findById(player.getClubId()).orElseThrow(() -> new CustomNotFoundException(new Club(),player.getClubId()));
-        International international = internationalRepository.findById(player.getInternationalId()).orElseThrow(() -> new CustomNotFoundException(new International(),player.getInternationalId()));
+        Player dbPlayer = playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Player.class.getSimpleName(),id));
+        Club club = clubRepository.findById(player.getClubId()).orElseThrow(() -> new CustomNotFoundException(Club.class.getSimpleName(),player.getClubId()));
+        International international = internationalRepository.findById(player.getInternationalId()).orElseThrow(() -> new CustomNotFoundException(International.class.getSimpleName(),player.getInternationalId()));
 
         dbPlayer.setFirstName(player.getFirstName());
         dbPlayer.setLastName(player.getLastName());
@@ -74,7 +74,7 @@ public class PlayerService {
 
     @Transactional
     public String deletePlayer(@PathVariable Long id){
-        Player player = playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Player(),id));
+        Player player = playerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Player.class.getSimpleName(),id));
         playerRepository.delete(player);
         return "Player deleted";
     }

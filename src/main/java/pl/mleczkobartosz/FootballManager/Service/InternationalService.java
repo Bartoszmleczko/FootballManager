@@ -26,7 +26,7 @@ public class InternationalService {
 
     @Transactional
     public International findById(Long id){
-        return internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(new International(),id));
+        return internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(International.class.getSimpleName(),id));
     }
 
     @Transactional
@@ -36,14 +36,14 @@ public class InternationalService {
 
     @Transactional
     public International update(Long id, International international){
-        International dbInternational = internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(new International(),id));
+        International dbInternational = internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(International.class.getSimpleName(),id));
         dbInternational.setInternationalName(international.getInternationalName());
         return internationalRepository.save(dbInternational);
     }
 
     @Transactional
     public String delete(Long id){
-        International international = internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(new International(),id));
+        International international = internationalRepository.findById(id).orElseThrow(() ->new CustomNotFoundException(International.class.getSimpleName(),id));
         internationalRepository.delete(international);
         return "International deleted";
     }

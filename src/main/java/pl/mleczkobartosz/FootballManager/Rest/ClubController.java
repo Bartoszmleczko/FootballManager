@@ -12,6 +12,7 @@ import pl.mleczkobartosz.FootballManager.Model.ClubModel;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
 import pl.mleczkobartosz.FootballManager.Repository.LeagueRepository;
 import pl.mleczkobartosz.FootballManager.Repository.ManagerRepository;
+import pl.mleczkobartosz.FootballManager.Service.ClubService;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -19,66 +20,37 @@ import java.util.Optional;
 @RestController
 public class ClubController {
 
-    private final ClubRepository clubRepository;
-    private final ManagerRepository managerRepository;
-    private final LeagueRepository leagueRepository;
+    private final ClubService clubService;
 
-
-    public ClubController(ClubRepository clubRepository, ManagerRepository managerRepository, LeagueRepository leagueRepository) {
-        this.clubRepository = clubRepository;
-        this.managerRepository = managerRepository;
-        this.leagueRepository = leagueRepository;
+    public ClubController(ClubService clubService) {
+        this.clubService = clubService;
     }
 
     @GetMapping("/clubs")
     public Page<Club> findAll(Optional<String> name, Optional<Integer> year, Pageable pageable){
-        if(!year.isPresent())
-            return clubRepository.findByClubName(name.orElse("_"),pageable);
-
-        return clubRepository.findByClubNameAndFoundationYear(name.orElse("_"),year.get(),pageable);
+        return clubService.findAll(name,year,pageable);
     }
 
     @GetMapping("/clubs/{id}")
     public Club getClub(@PathVariable Long id){
-        return clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Club(),id));
+        return clubService.findById(id);
     }
 
     @PostMapping("/clubs")
     public Club saveClub(@Valid @RequestBody ClubModel clubModel){
 
-        Club club =  new Club();
-        League league = leagueRepository.findById(clubModel.getLeagueId()).orElseThrow(() -> new CustomNotFoundException(new League(),clubModel.getLeagueId()));
-        Manager manager = managerRepository.findById(clubModel.getManagerId()).orElseThrow(() -> new CustomNotFoundException(new Manager(),clubModel.getManagerId()));
+        return clubService.save(clubModel);
 
-        club.setClubName(clubModel.getClubName());
-        club.setFoundationYear(clubModel.getFoundationYear());
-        club.setLeague(league);
-        if(manager.getClub()==null){
-            club.setMenager(manager);
-        }else
-        {
-            throw new ManagerAlreadyHasAClubException(manager.getMenager_id());
-        }
-        club.setPlayers(null);
-
-        return clubRepository.save(club);
     }
 
     @PutMapping("/clubs/{id}")
     public Club updateClub(@PathVariable Long id,@Valid @RequestBody ClubModel clubModel){
-        Club dbClub = clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Club(),id));
-        dbClub.setClubName(clubModel.getClubName());
-        dbClub.setFoundationYear(clubModel.getFoundationYear());
-        dbClub.setMenager( managerRepository.findById(clubModel.getManagerId()).orElseThrow(() -> new CustomNotFoundException(new Manager(),clubModel.getManagerId())));
-        dbClub.setLeague( leagueRepository.findById( clubModel.getLeagueId()).orElseThrow(() -> new CustomNotFoundException(new League(), clubModel.getLeagueId())) );
-        return clubRepository.save(dbClub);
+        return clubService.update(id,clubModel);
     }
 
     @DeleteMapping("/clubs/{id}")
     public String deleteClub(@PathVariable Long id){
-        Club dbClub = clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Club(),id));
-        clubRepository.delete(dbClub);
-        return "Club deleted";
+        return clubService.delete(id);
     }
 
 

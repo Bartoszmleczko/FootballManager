@@ -30,7 +30,7 @@ public class ManagerService {
 
     @Transactional
     public Manager findById(Long id){
-        return managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
+        return managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Manager.class.getSimpleName(),id));
     }
 
     @Transactional
@@ -40,7 +40,7 @@ public class ManagerService {
 
     @Transactional
     public Manager updateManager (Long id, Manager manager){
-        Manager dbManager = managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
+        Manager dbManager = managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Manager.class.getSimpleName(),id));
 
         dbManager.setFirstName(manager.getFirstName());
         dbManager.setLastName(manager.getLastName());
@@ -50,7 +50,7 @@ public class ManagerService {
 
     @Transactional
     public String delete(Long id){
-        Manager manager = managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(new Manager(),id));
+        Manager manager = managerRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Manager.class.getSimpleName(),id));
         managerRepository.delete(manager);
         return "Manager has been deleted";
     }

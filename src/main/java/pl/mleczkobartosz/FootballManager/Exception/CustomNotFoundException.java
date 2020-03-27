@@ -2,7 +2,7 @@ package pl.mleczkobartosz.FootballManager.Exception;
 
 public class CustomNotFoundException extends RuntimeException {
 
-    public CustomNotFoundException(Object object, Long id) {
-        super(object.getClass().getSimpleName() + " with id " + id + " does not exist.");
+    public CustomNotFoundException(String name, Long id) {
+        super(name + " with id " + id + " does not exist.");
     }
 }
