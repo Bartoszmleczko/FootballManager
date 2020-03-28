@@ -6,11 +6,15 @@ import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.Club;
 import pl.mleczkobartosz.FootballManager.Entity.League;
 import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
+import pl.mleczkobartosz.FootballManager.Model.FixtureGenerator;
+import pl.mleczkobartosz.FootballManager.Model.FootballMatch;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
 import pl.mleczkobartosz.FootballManager.Repository.LeagueRepository;
 import pl.mleczkobartosz.FootballManager.Service.LeagueService;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 public class LeagueController {
@@ -44,6 +48,18 @@ private final LeagueService leagueService;
     @DeleteMapping("/leagues/{id}")
     public String deleteLeague(@PathVariable Long id){
        return  leagueService.delete(id);
+    }
+
+    @GetMapping("leagues/{id}/clubs")
+    public Set<Club> getLeaguesClubs(@PathVariable Long id){
+        return leagueService.findClubs(id);
+    }
+
+    @GetMapping("leagues/{id}/fixtures")
+    public List<List<FootballMatch>> getFixturesList(@PathVariable Long id){
+        FixtureGenerator generator = new FixtureGenerator(leagueService);
+        return generator.generate(id);
+
     }
 
 
