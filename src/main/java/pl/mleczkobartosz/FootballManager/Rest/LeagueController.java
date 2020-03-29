@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.mleczkobartosz.FootballManager.Entity.Club;
 import pl.mleczkobartosz.FootballManager.Entity.League;
 import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
+import pl.mleczkobartosz.FootballManager.Model.Fixture;
 import pl.mleczkobartosz.FootballManager.Model.FixtureGenerator;
 import pl.mleczkobartosz.FootballManager.Model.FootballMatch;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
@@ -56,7 +57,7 @@ private final LeagueService leagueService;
     }
 
     @GetMapping("leagues/{id}/fixtures")
-    public List<List<FootballMatch>> getFixturesList(@PathVariable Long id){
+    public List<Fixture> getFixturesList(@PathVariable Long id){
         FixtureGenerator generator = new FixtureGenerator(leagueService);
         return generator.generate(id);
 
