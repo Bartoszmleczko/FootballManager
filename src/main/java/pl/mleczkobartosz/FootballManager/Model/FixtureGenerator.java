@@ -49,6 +49,8 @@ public class FixtureGenerator {
             fixture.getMatches().clear();
             fixture.setFixtureNo((long) j);
             fixture.setFixtureStart(seasonStartDate.plusWeeks(j));
+            int fixtureLength = Math.round(clubList.size()/3);
+            fixture.setFixtureEnd(seasonStartDate.plusWeeks(j).plusDays(fixtureLength));
             if(j>0){
                 Club lastofFirstList = list1.get(list1.size()-1);
                 for(int k = 1; k<list1.size()-1;k++){
@@ -68,7 +70,7 @@ public class FixtureGenerator {
                 if(list1.get(i)!=list2.get(i)){
                     match.setHomeTeam(list1.get(i));
                     match.setAwayTeam(list2.get(i));
-
+                    match.setDate(fixture.getFixtureStart().plusDays(i%fixtureLength));
                     fixture.getMatches().add(match);
                 }
             }
