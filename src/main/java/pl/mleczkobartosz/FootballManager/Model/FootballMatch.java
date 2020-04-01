@@ -14,9 +14,12 @@ public class FootballMatch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_id")
     private Long match_id;
-
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     private Club homeTeam;
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     private Club awayTeam;
+    @ManyToOne
+    private Fixture fixture;
     @Column(name = "match_date")
     private LocalDateTime date;
 

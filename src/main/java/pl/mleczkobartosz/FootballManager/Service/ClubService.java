@@ -9,12 +9,14 @@ import pl.mleczkobartosz.FootballManager.Entity.Manager;
 import pl.mleczkobartosz.FootballManager.Exception.CustomNotFoundException;
 import pl.mleczkobartosz.FootballManager.Exception.ManagerAlreadyHasAClubException;
 import pl.mleczkobartosz.FootballManager.Model.ClubModel;
+import pl.mleczkobartosz.FootballManager.Model.FootballMatch;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
 import pl.mleczkobartosz.FootballManager.Repository.LeagueRepository;
 import pl.mleczkobartosz.FootballManager.Repository.ManagerRepository;
 import pl.mleczkobartosz.FootballManager.Repository.PlayerRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -81,5 +83,10 @@ public class ClubService {
         Club dbClub = clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Club.class.getSimpleName(),id));
         clubRepository.delete(dbClub);
         return "Club deleted";
+    }
+
+    @Transactional
+    public List<FootballMatch> getClubMatches(Long id){
+        return clubRepository.findById(id).get()
     }
 }

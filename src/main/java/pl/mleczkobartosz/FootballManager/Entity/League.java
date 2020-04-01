@@ -1,13 +1,16 @@
 package pl.mleczkobartosz.FootballManager.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import pl.mleczkobartosz.FootballManager.Model.Fixture;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,6 +28,10 @@ public class League {
     @Size(min = 3)
     @Column(name = "league_name")
     private String leagueName;
+
+    @OneToMany(mappedBy = "league")
+    @JsonBackReference
+    private List<Fixture> fixtures = new ArrayList<>();
 
     @OneToMany(mappedBy = "league")
     @JsonBackReference

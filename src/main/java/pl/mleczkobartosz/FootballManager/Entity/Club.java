@@ -1,10 +1,13 @@
 package pl.mleczkobartosz.FootballManager.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import pl.mleczkobartosz.FootballManager.Model.FootballMatch;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,6 +44,14 @@ public class Club {
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn
     private League league;
+
+    @OneToMany(mappedBy = "homeTeam")
+    @JsonBackReference("homeMatches")
+    private List<FootballMatch> homeMatches = new ArrayList<>();
+
+    @OneToMany(mappedBy = "awayTeam")
+    @JsonBackReference("awayMatches")
+    private List<FootballMatch> awayMatches = new ArrayList<>();
 
     @OneToMany(mappedBy = "buyingClub")
     @JsonBackReference("incomeTransfer")
@@ -127,6 +138,22 @@ public class Club {
 
     public void setOutcomeTransfers(Set<Transfer> outcomeTransfers) {
         this.outcomeTransfers = outcomeTransfers;
+    }
+
+    public List<FootballMatch> getHomeMatches() {
+        return homeMatches;
+    }
+
+    public void setHomeMatches(List<FootballMatch> homeMatches) {
+        this.homeMatches = homeMatches;
+    }
+
+    public List<FootballMatch> getAwayMatches() {
+        return awayMatches;
+    }
+
+    public void setAwayMatches(List<FootballMatch> awayMatches) {
+        this.awayMatches = awayMatches;
     }
 }
 
