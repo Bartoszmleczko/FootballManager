@@ -66,4 +66,20 @@ public class Fixture {
     public void setFixtureEnd(LocalDateTime fixtureEnd) {
         this.fixtureEnd = fixtureEnd;
     }
+
+    public Long getFixture_id() {
+        return fixture_id;
+    }
+
+    public void setFixture_id(Long fixture_id) {
+        this.fixture_id = fixture_id;
+    }
+
+    public League getLeague() {
+        return league;
+    }
+
+    public void setLeague(League league) {
+        this.league = league;
+    }
 }

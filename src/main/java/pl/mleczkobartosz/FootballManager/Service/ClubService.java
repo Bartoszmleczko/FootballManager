@@ -16,6 +16,7 @@ import pl.mleczkobartosz.FootballManager.Repository.ManagerRepository;
 import pl.mleczkobartosz.FootballManager.Repository.PlayerRepository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +88,14 @@ public class ClubService {
 
     @Transactional
     public List<FootballMatch> getClubMatches(Long id){
-        return clubRepository.findById(id).get()
+
+        Club club = clubRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Club.class.getSimpleName(),id));
+        List<FootballMatch> allMatches = new ArrayList<>();
+        allMatches.addAll(club.getHomeMatches());
+        allMatches.addAll(club.getAwayMatches());
+        return allMatches;
+
     }
+
+
 }

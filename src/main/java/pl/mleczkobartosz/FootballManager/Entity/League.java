@@ -68,5 +68,13 @@ public class League {
     public void setClubs(Set<Club> clubs) {
         this.clubs = clubs;
     }
+
+    public List<Fixture> getFixtures() {
+        return fixtures;
+    }
+
+    public void setFixtures(List<Fixture> fixtures) {
+        this.fixtures = fixtures;
+    }
 }
 
