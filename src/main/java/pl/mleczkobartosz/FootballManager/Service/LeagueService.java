@@ -10,6 +10,7 @@ import pl.mleczkobartosz.FootballManager.Model.Fixture;
 import pl.mleczkobartosz.FootballManager.Model.FootballMatch;
 import pl.mleczkobartosz.FootballManager.Repository.ClubRepository;
 import pl.mleczkobartosz.FootballManager.Repository.FixtureRepository;
+import pl.mleczkobartosz.FootballManager.Repository.FootballMatchRepository;
 import pl.mleczkobartosz.FootballManager.Repository.LeagueRepository;
 
 import javax.transaction.Transactional;
@@ -23,11 +24,13 @@ public class LeagueService {
     private final LeagueRepository leagueRepository;
     private final ClubRepository clubRepository;
     private final FixtureRepository fixtureRepository;
+    private final FootballMatchRepository footballMatchRepository;
 
-    public LeagueService(LeagueRepository leagueRepository, ClubRepository clubRepository, FixtureRepository fixtureRepository) {
+    public LeagueService(LeagueRepository leagueRepository, ClubRepository clubRepository, FixtureRepository fixtureRepository, FootballMatchRepository footballMatchRepository) {
         this.leagueRepository = leagueRepository;
         this.clubRepository = clubRepository;
         this.fixtureRepository = fixtureRepository;
+        this.footballMatchRepository = footballMatchRepository;
     }
 
     public Page<League> findAll(Optional<String> leagueName, Pageable pageable){
@@ -70,6 +73,7 @@ public class LeagueService {
             List<Fixture> fixtures = this.generateFixtures(id);
             for(Fixture f : fixtures){
                 fixtureRepository.save(f);
+                footballMatchRepository.saveAll(f.getMatches());
             }
             return "Fixtures generated in database";
         }else{
